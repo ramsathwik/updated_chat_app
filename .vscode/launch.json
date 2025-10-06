@@ -1,0 +1,33 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Backend debugger
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Backend (Node.js)",
+      "program": "${workspaceFolder}/backend/server.js", 
+      "cwd": "${workspaceFolder}/backend",
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    {
+      // Frontend debugger (Vite + React in Chrome)
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug Frontend (Vite React)",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend/src"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Both (Frontend + Backend)",
+      "configurations": [
+        "Debug Backend (Node.js)",
+        "Debug Frontend (Vite React)"
+      ]
+    }
+  ]
+}
