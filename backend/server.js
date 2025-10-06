@@ -5,6 +5,8 @@ const cors = require("cors");
 let mongoose = require("mongoose");
 let { Server } = require("socket.io");
 let server;
+let dotenv = require("dotenv");
+dotenv.config();
 
 //Routers
 let Authrouter = require("./routes/AuthRouter");
@@ -24,7 +26,7 @@ let sockethandling = require("./socket");
 
 //server start
 mongoose
-  .connect("mongodb+srv://user:user@cluster0.70kvqx3.mongodb.net/chatapp")
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("successfully connected to database");
     server = app.listen(3000, () => {
