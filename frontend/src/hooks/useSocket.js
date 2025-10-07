@@ -71,6 +71,8 @@ function useSocket() {
           if (msg.from == userRef.current) {
             return;
           }
+          let { Sentiment } = msg;
+          console.log(Sentiment);
           console.log("from handle private msgs");
           // if (!chatsRef.current[msg.id]) {
           //   chatsRef.current[msg.id] = [];
@@ -166,8 +168,8 @@ function useSocket() {
 
   async function renderMessages(userid) {
     // console.log();
-    // let response = await fetch(`${API_URL}/chat/${userRef.current}/${userid}`);
-    // let message = await response.json();
+    let response = await fetch(`${API_URL}/chat/${userRef.current}/${userid}`);
+    let message = await response.json();
     setMessages(chatsRef.current[userid] || []);
     selectedUserRef.current = userid;
     setUnread((prevUnread) => ({

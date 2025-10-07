@@ -1,5 +1,19 @@
 let onlineusers = [];
 let Message = require("./models/message");
+async function analyzeMessage(text) {
+  try {
+    const res = await fetch("http://127.0.0.1:8001/api/analyze/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text }),
+    });
+    const data = await res.json();
+    console.log("💬 Django Sentiment Response:", data);
+    return data;
+  } catch (error) {
+    console.error("❌ Django API error:", error);
+  }
+}
 
 function sockethandling(io) {
   io.on("connection", (socket) => {
@@ -35,7 +49,11 @@ function sockethandling(io) {
     socket.on("privateMessage", async (msg) => {
       let { from, to, text } = msg;
       let newmessage = new Message({ from, to, text });
+      let Sentiment = await analyzeMessage(newmessage.text);
+      console.log(newmessage);
       await newmessage.save();
+      newmessage = { ...newmessage.toObject(), Sentiment };
+      console.log(newmessage);
       const isExists = onlineusers.find((client) => client.id == to);
       if (isExists) {
         io.to(isExists.socketid).emit("privateMessage", newmessage);
@@ -45,7 +63,6 @@ function sockethandling(io) {
     //typing status
     socket.on("showTyping", (msg) => {
       let { fromid, to } = msg;
-      console.log(msg);
       //io.to(to).emit("showTyping", { id: fromid, text: "typing..." });
     });
   });
